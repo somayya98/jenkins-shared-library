@@ -1,4 +1,4 @@
-def call (){
+def call (Map configMap){
     pipeline {
     // These are pre-build sections
         agent {
@@ -14,7 +14,7 @@ def call (){
             COMPONENT = "catalogue"
         }
         options {
-            timeout(time: 10, unit: 'MINUTES') 
+            timeout(time: 60, unit: 'MINUTES') 
             disableConcurrentBuilds()
         }
         // This is build section
