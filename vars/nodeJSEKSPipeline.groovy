@@ -157,15 +157,15 @@ def call (Map configMap){
                         build job: '../catalogue-deploy',
                             wait: false, // Wait for completion
                             propagate: false, // Propagate status
-                             parameters: [
-                                 string(name: 'apiVersion', value: "${appVersion}"),
-                                 string(name: 'deploy_to', value: "dev}")
-                             ]
+                            parameters: [
+                                string(name: 'appVersion', value: "${appVersion}"),
+                                string(name: 'deploy_to', value: "dev")
+                            ]
                     }
                 }
             }
 
-        }    
+        }   
 
         post {
             always {
