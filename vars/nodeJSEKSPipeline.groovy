@@ -135,6 +135,7 @@ def call (Map configMap){
                     }
                 }
             }
+
             // stage('Trivy Scan'){
             //     steps {
             //         script{
@@ -150,7 +151,21 @@ def call (Map configMap){
             //         }
             //     }
             // }
-        }
+            stage('Trigger DEV Deploy') {
+                steps {
+                    script {
+                        build job: '10-sg',
+                            wait: false, // Wait for completion
+                            propagate: false, // Propagate status
+                             parameters: [
+                                 string(name: 'apiVersion', value: "${appVersion}"),
+                                 string(name: 'apiVersion', value: "${appVersion}")
+                             ]
+                    }
+                }
+            }
+
+        }    
 
         post {
             always {
