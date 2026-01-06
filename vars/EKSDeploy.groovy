@@ -12,7 +12,7 @@ def call (Map configMap){
             ACC_ID = "930832106480"
             PROJECT = configMap.get("project")
             COMPONENT = configMap.get("component")
-            .deploy_to = configMap.get(".deploy_to")
+            deploy_to = configMap.get("deploy_to")
             REGION = "us-east-1"
         }
         options {
@@ -21,7 +21,7 @@ def call (Map configMap){
         }
         parameters {
             string(name: 'appVersion', description: 'Which app version you want to deploy')
-            choice(name: '.deploy_to', choices: ['dev', 'qa', 'produ'], description: 'Pick something') 
+            choice(name: 'deploy_to', choices: ['dev', 'qa', 'produ'], description: 'Pick something') 
         }
         // This is build section
         stages {
@@ -35,7 +35,7 @@ def call (Map configMap){
                                 aws eks update-kubeconfig --region ${REGION} --name ${PROJECT}-${deploy_to}
                                 kubectl get nodes
                                 sed -i "s/IMAGE_VERSION/${appVersion}/g" values.yaml
-                                helm upgrade --install ${COMPONENT} -f values-${.deploy_to}.yaml -n ${PROJECT} --atomic --wait --timeout=5m .
+                                helm upgrade --install ${COMPONENT} -f values-${deploy_to}.yaml -n ${PROJECT} --atomic --wait --timeout=5m .
                             """
                         }
                     }
@@ -43,7 +43,7 @@ def call (Map configMap){
             }
             stage('Functional Testing'){
                 when{
-                    expression { .deploy_to == "dev" }
+                    expression { deploy_to == "dev" }
                 }
                 steps{
                     script{
