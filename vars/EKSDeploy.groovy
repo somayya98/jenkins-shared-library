@@ -43,10 +43,6 @@ def call (Map configMap){
             }
             
         }
-            
-        
-
-
         post {
             always {
                 echo 'Pipeline finished'
