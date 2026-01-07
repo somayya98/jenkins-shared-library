@@ -27,6 +27,9 @@ def call (Map configMap){
         stages {
             
             stage('Deploy') {
+                when{
+                    expression { deploy_to == "dev" || deploy_to = "qa" || deploy_to = "qa" }
+                }
                 steps {
                     script{
                         withAWS(region:'us-east-1',credentials:'aws-creds') {
@@ -35,7 +38,8 @@ def call (Map configMap){
                                 aws eks update-kubeconfig --region ${REGION} --name ${PROJECT}-${deploy_to}
                                 kubectl get nodes
                                 sed -i "s/IMAGE_VERSION/${appVersion}/g" values.yaml
-                                helm upgrade --install ${COMPONENT} -f values-${deploy_to}.yaml -n ${PROJECT} --atomic --wait --timeout=10m .
+                                helm upgrade --install ${COMPONENT} -f values-${deploy_to}.yaml -n ${PROJECT} --atomic --wait --timeout=5m .
+                                #kubectl apply -f ${COMPONENT}-${deploy_to}.yaml
                             """
                         }
                     }
